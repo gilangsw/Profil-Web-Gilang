@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gilang Seyta Wijaya — Designer App & Programming</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cream: '#F9F9F6',
+                        surface: '#F2F2EC',
+                        cardbg: '#FFFFFF',
+                        bordercolor: '#E6E6DF',
+                        darktext: '#161615',
+                        mutedtext: '#686863',
+                        accent: '#C25933', // Sophisticated warm terracotta
+                        accenthover: '#A34726',
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'subtle': '0 4px 20px -2px rgba(22, 22, 21, 0.05)',
+                        'card-hover': '0 12px 30px -4px rgba(22, 22, 21, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom smooth scrollbar and selection */
+        ::selection {
+            background-color: #C25933;
+            color: #FFFFFF;
+        }
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #F9F9F6;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D1D1C7;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #C25933;
+        }
+
+        /* Fade-in scroll utility */
+        .reveal {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: opacity, transform;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-cream text-darktext font-sans antialiased selection:bg-accent selection:text-white">
+
+    <!-- Toast Notification Box -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 bg-darktext text-white px-5 py-3 rounded-xl shadow-xl flex items-center space-x-3 text-sm font-medium">
+        <i class="fa-solid fa-circle-check text-accent text-lg"></i>
+        <span id="toast-message">Message sent successfully!</span>
+    </div>
+
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-40 bg-cream/80 backdrop-blur-md border-b border-bordercolor transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <!-- Logo / Brand -->
+            <a href="#hero" class="group flex items-center space-x-2 text-lg font-bold tracking-tight text-darktext">
+                <span class="w-8 h-8 rounded-lg bg-darktext text-cream flex items-center justify-center font-semibold text-sm group-hover:bg-accent transition-colors duration-300">AR</span>
+                <span class="tracking-tighter">Alex Rivers</span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-mutedtext">
+                <a href="#about" class="hover:text-darktext transition-colors">About</a>
+                <a href="#projects" class="hover:text-darktext transition-colors">Projects</a>
+                <a href="#experience" class="hover:text-darktext transition-colors">Experience</a>
+                <a href="#skills" class="hover:text-darktext transition-colors">Skills</a>
+                <a href="#contact" class="hover:text-darktext transition-colors">Contact</a>
+            </nav>
+
+            <!-- Action CTA -->
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#contact" class="px-5 py-2.5 rounded-full bg-darktext text-cream text-sm font-medium hover:bg-accent transition-all duration-300 shadow-sm hover:shadow">
+                    Lets's Talk
+                </a>
+            </div>
+
+            <!-- Mobile Menu Button -->
+            <button id="menu-btn" aria-label="Toggle Navigation" class="md:hidden w-10 h-10 rounded-lg flex flex-col items-center justify-center space-y-1.5 focus:outline-none bg-surface border border-bordercolor">
+                <span class="w-5 h-0.5 bg-darktext transition-transform duration-300 origin-center" id="bar1"></span>
+                <span class="w-5 h-0.5 bg-darktext transition-opacity duration-300" id="bar2"></span>
+                <span class="w-5 h-0.5 bg-darktext transition-transform duration-300 origin-center" id="bar3"></span>
+            </button>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-20 left-0 w-full bg-cream border-b border-bordercolor px-6 py-6 shadow-xl flex flex-col space-y-4">
+            <a href="#about" class="mobile-link text-lg font-medium text-darktext py-2 border-b border-bordercolor/50">About</a>
+            <a href="#projects" class="mobile-link text-lg font-medium text-darktext py-2 border-b border-bordercolor/50">Projects</a>
+            <a href="#experience" class="mobile-link text-lg font-medium text-darktext py-2 border-b border-bordercolor/50">Experience</a>
+            <a href="#skills" class="mobile-link text-lg font-medium text-darktext py-2 border-b border-bordercolor/50">Skills</a>
+            <a href="#contact" class="mobile-link text-lg font-medium text-accent py-2 font-semibold">Let's Talk →</a>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 pt-32 pb-20 overflow-hidden">
+
+        <!-- Hero Section -->
+        <section id="hero" class="min-h-[85vh] flex flex-col justify-center items-start pt-10 pb-16">
+            <div class="reveal inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext mb-8">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Available for Select Freelance & Full-time Roles</span>
+            </div>
+
+            <h1 class="reveal text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-darktext leading-[1.1] max-w-4xl mb-8">
+                Crafting digital systems, interfaces & <span class="text-accent underline decoration-accent/30 underline-offset-8">thoughtful code.</span>
+            </h1>
+
+            <p class="reveal text-lg sm:text-xl text-mutedtext font-normal max-w-2xl leading-relaxed mb-10">
+                Hi, I'm Alex Rivers — a product designer and frontend engineer focused on building clean minimalist interfaces, intuitive user experiences, and scalable web apps.
+            </p>
+
+            <div class="reveal flex flex-wrap items-center gap-4">
+                <a href="#projects" class="px-7 py-3.5 rounded-full bg-darktext text-cream font-medium text-sm hover:bg-accent transition-all duration-300 shadow-sm flex items-center space-x-2 group">
+                    <span>Explore Selected Work</span>
+                    <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                </a>
+                <a href="#contact" class="px-7 py-3.5 rounded-full bg-surface border border-bordercolor text-darktext font-medium text-sm hover:bg-bordercolor/60 transition-all duration-300">
+                    Get in Touch
+                </a>
+            </div>
+
+            <!-- Key metrics / stats bar -->
+            <div class="reveal grid grid-cols-2 sm:grid-cols-4 gap-6 w-full mt-20 pt-12 border-t border-bordercolor">
+                <div>
+                    <p class="text-3xl sm:text-4xl font-bold text-darktext">6+</p>
+                    <p class="text-sm text-mutedtext mt-1">Years Experience</p>
+                </div>
+                <div>
+                    <p class="text-3xl sm:text-4xl font-bold text-darktext">40+</p>
+                    <p class="text-sm text-mutedtext mt-1">Projects Delivered</p>
+                </div>
+                <div>
+                    <p class="text-3xl sm:text-4xl font-bold text-darktext">99%</p>
+                    <p class="text-sm text-mutedtext mt-1">Client Satisfaction</p>
+                </div>
+                <div>
+                    <p class="text-3xl sm:text-4xl font-bold text-darktext">15+</p>
+                    <p class="text-sm text-mutedtext mt-1">Global Brands</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="py-24 border-t border-bordercolor">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 reveal">
+                    <div class="relative rounded-2xl overflow-hidden border border-bordercolor aspect-[4/5] shadow-subtle group">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Alex Rivers Portrait" 
+                             class="w-full h-full object-cover grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                             onerror="this.src='https://placehold.co/600x750/E6E6DF/161615?text=Alex+Rivers'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-darktext/60 via-transparent to-transparent opacity-60"></div>
+                        <div class="absolute bottom-6 left-6 right-6 text-white">
+                            <p class="text-xs font-semibold tracking-wider uppercase text-accent mb-1">Based in San Francisco, CA</p>
+                            <p class="text-lg font-medium">Designing at the intersection of clarity and utility.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 reveal space-y-6">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext">
+                        <span>About Me</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-darktext">
+                        I bridge the gap between rigorous design systems and robust engineering.
+                    </h2>
+                    <p class="text-mutedtext text-base sm:text-lg leading-relaxed">
+                        My approach is rooted in reductionism—stripping away the non-essential so that typography, layout, and interaction shine. Whether architecting a design system for enterprise software or building high-performance e-commerce experiences, I prioritize user intent and seamless execution.
+                    </p>
+                    <p class="text-mutedtext text-base leading-relaxed">
+                        When I'm not pushing pixels or writing clean TypeScript, you'll find me exploring analogue photography, reading architectural theory, or contributing to open-source UI libraries.
+                    </p>
+                    
+                    <div class="pt-4 flex flex-wrap gap-4">
+                        <div class="px-4 py-3 rounded-xl bg-surface border border-bordercolor flex items-center space-x-3">
+                            <i class="fa-solid fa-pen-nib text-accent"></i>
+                            <div>
+                                <p class="text-xs text-mutedtext">Specialization</p>
+                                <p class="text-sm font-semibold text-darktext">UI/UX Architecture</p>
+                            </div>
+                        </div>
+                        <div class="px-4 py-3 rounded-xl bg-surface border border-bordercolor flex items-center space-x-3">
+                            <i class="fa-solid fa-code text-accent"></i>
+                            <div>
+                                <p class="text-xs text-mutedtext">Development</p>
+                                <p class="text-sm font-semibold text-darktext">Frontend Engineering</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section -->
+        <section id="projects" class="py-24 border-t border-bordercolor">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 reveal">
+                <div>
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext mb-4">
+                        <span>Portfolio</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-darktext">Selected Works</h2>
+                </div>
+
+                <!-- Category Filters -->
+                <div class="flex flex-wrap gap-2" id="project-filters">
+                    <button data-filter="all" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-darktext text-cream transition-all duration-300">All Work</button>
+                    <button data-filter="uiux" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-surface border border-bordercolor text-mutedtext hover:text-darktext transition-all duration-300">UI/UX Design</button>
+                    <button data-filter="webdev" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-surface border border-bordercolor text-mutedtext hover:text-darktext transition-all duration-300">Web Dev</button>
+                    <button data-filter="branding" class="filter-btn px-4 py-2 rounded-full text-xs font-semibold bg-surface border border-bordercolor text-mutedtext hover:text-darktext transition-all duration-300">Branding</button>
+                </div>
+            </div>
+
+            <!-- Projects Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="projects-grid">
+                
+                <!-- Project 1 -->
+                <div class="project-card reveal group bg-cardbg rounded-2xl border border-bordercolor overflow-hidden shadow-subtle hover:shadow-card-hover transition-all duration-500 flex flex-col" data-category="uiux webdev">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-surface">
+                        <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Aether Design System" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/800x500/E6E6DF/161615?text=Aether+Design+System'">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cream/90 backdrop-blur-md text-darktext border border-bordercolor">UI/UX & Web Dev</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-darktext group-hover:text-accent transition-colors">Aether Design System</h3>
+                                <span class="text-xs font-medium text-mutedtext">2025</span>
+                            </div>
+                            <p class="text-mutedtext text-sm leading-relaxed mb-6">
+                                A comprehensive multi-brand tokenized design system built for fintech applications, reducing design-to-code iteration time by 45%.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-bordercolor">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Figma</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">React</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Tailwind</span>
+                            </div>
+                            <button onclick="openModal('Aether Design System', 'Comprehensive multi-brand tokenized design system built for fintech applications. Includes over 80+ accessible components, dark/light semantic theming, automated token sync via Style Dictionary, and fully documented Storybook integration.', 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop')" class="w-9 h-9 rounded-full bg-surface border border-bordercolor flex items-center justify-center group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all">
+                                <i class="fa-solid fa-arrow-up-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card reveal group bg-cardbg rounded-2xl border border-bordercolor overflow-hidden shadow-subtle hover:shadow-card-hover transition-all duration-500 flex flex-col" data-category="uiux branding">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-surface">
+                        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Komorebi Mobile App" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/800x500/E6E6DF/161615?text=Komorebi+Mobile+App'">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cream/90 backdrop-blur-md text-darktext border border-bordercolor">UI/UX & Branding</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-darktext group-hover:text-accent transition-colors">Komorebi Mobile App</h3>
+                                <span class="text-xs font-medium text-mutedtext">2025</span>
+                            </div>
+                            <p class="text-mutedtext text-sm leading-relaxed mb-6">
+                                A mindful focus and ambient soundscape iOS application featuring tactile haptic feedback and serene minimalist typography.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-bordercolor">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">iOS</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">SwiftUI</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">UX Research</span>
+                            </div>
+                            <button onclick="openModal('Komorebi Mobile App', 'A mindful focus and ambient soundscape iOS application. Designed with rigorous attention to typography, spatial audio feedback, and low-latency offline playback. Featured on Apple App Store Editor Choice.', 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop')" class="w-9 h-9 rounded-full bg-surface border border-bordercolor flex items-center justify-center group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all">
+                                <i class="fa-solid fa-arrow-up-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card reveal group bg-cardbg rounded-2xl border border-bordercolor overflow-hidden shadow-subtle hover:shadow-card-hover transition-all duration-500 flex flex-col" data-category="webdev">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-surface">
+                        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Voxel E-commerce Platform" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/800x500/E6E6DF/161615?text=Voxel+E-commerce'">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cream/90 backdrop-blur-md text-darktext border border-bordercolor">Web Dev</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-darktext group-hover:text-accent transition-colors">Voxel E-commerce Platform</h3>
+                                <span class="text-xs font-medium text-mutedtext">2024</span>
+                            </div>
+                            <p class="text-mutedtext text-sm leading-relaxed mb-6">
+                                Headless e-commerce storefront for an architectural furniture brand with lightning-fast sub-second page loads and WebGL product previews.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-bordercolor">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Next.js</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Three.js</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">GraphQL</span>
+                            </div>
+                            <button onclick="openModal('Voxel E-commerce Platform', 'A high-performance headless storefront built for high-end architectural furniture. Features real-time 3D product customization via Three.js, optimized Edge caching, and a frictionless checkout flow.', 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1000&auto=format&fit=crop')" class="w-9 h-9 rounded-full bg-surface border border-bordercolor flex items-center justify-center group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all">
+                                <i class="fa-solid fa-arrow-up-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 4 -->
+                <div class="project-card reveal group bg-cardbg rounded-2xl border border-bordercolor overflow-hidden shadow-subtle hover:shadow-card-hover transition-all duration-500 flex flex-col" data-category="branding">
+                    <div class="relative aspect-[16/10] overflow-hidden bg-surface">
+                        <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop" 
+                             alt="Luminary Architectural Identity" 
+                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://placehold.co/800x500/E6E6DF/161615?text=Luminary+Identity'">
+                        <div class="absolute top-4 left-4">
+                            <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cream/90 backdrop-blur-md text-darktext border border-bordercolor">Branding</span>
+                        </div>
+                    </div>
+                    <div class="p-8 flex flex-col flex-grow justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <h3 class="text-xl font-bold text-darktext group-hover:text-accent transition-colors">Luminary Brand Identity</h3>
+                                <span class="text-xs font-medium text-mutedtext">2024</span>
+                            </div>
+                            <p class="text-mutedtext text-sm leading-relaxed mb-6">
+                                Brand identity, typography guidelines, and digital stationery for a sustainable Nordic architectural studio.
+                            </p>
+                        </div>
+                        <div class="flex items-center justify-between pt-4 border-t border-bordercolor">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Brand Strategy</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Typography</span>
+                                <span class="text-xs text-mutedtext bg-surface px-2.5 py-1 rounded-md">Print</span>
+                            </div>
+                            <button onclick="openModal('Luminary Brand Identity', 'Complete brand identity design for Luminary Architects. Focuses on organic warmth, austere grid systems, custom logotype, and sustainable stationery packaging.', 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop')" class="w-9 h-9 rounded-full bg-surface border border-bordercolor flex items-center justify-center group-hover:bg-accent group-hover:text-white group-hover:border-accent transition-all">
+                                <i class="fa-solid fa-arrow-up-right text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="py-24 border-t border-bordercolor">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-4 reveal">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext mb-4">
+                        <span>Career Path</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-darktext mb-4">Work Experience</h2>
+                    <p class="text-mutedtext text-base leading-relaxed">
+                        A history of designing and scaling digital products across high-growth startups and creative agencies.
+                    </p>
+                </div>
+
+                <div class="lg:col-span-8 space-y-8">
+                    
+                    <!-- Job 1 -->
+                    <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle hover:border-accent/40 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                            <div>
+                                <h3 class="text-xl font-bold text-darktext">Senior Product Designer & Lead Frontend</h3>
+                                <p class="text-accent text-sm font-medium mt-0.5">Vanguard Labs • San Francisco</p>
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-surface border border-bordercolor text-mutedtext w-fit">2023 — Present</span>
+                        </div>
+                        <p class="text-mutedtext text-sm leading-relaxed mb-4">
+                            Leading the design and engineering of enterprise dashboard workflows. Spearheaded the creation of the company-wide design token system used by 50+ engineers.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">React</span>
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">TypeScript</span>
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">Design Systems</span>
+                        </div>
+                    </div>
+
+                    <!-- Job 2 -->
+                    <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle hover:border-accent/40 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                            <div>
+                                <h3 class="text-xl font-bold text-darktext">UI/UX Designer & Web Developer</h3>
+                                <p class="text-accent text-sm font-medium mt-0.5">Studio Mono • Remote</p>
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-surface border border-bordercolor text-mutedtext w-fit">2021 — 2023</span>
+                        </div>
+                        <p class="text-mutedtext text-sm leading-relaxed mb-4">
+                            Delivered bespoke brand identities and high-end web experiences for clients in architecture, fashion, and technology. Managed full project lifecycles from wireframes to production code.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">Figma</span>
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">Next.js</span>
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">Tailwind CSS</span>
+                        </div>
+                    </div>
+
+                    <!-- Job 3 -->
+                    <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle hover:border-accent/40 transition-colors">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-2">
+                            <div>
+                                <h3 class="text-xl font-bold text-darktext">Junior Frontend Developer</h3>
+                                <p class="text-accent text-sm font-medium mt-0.5">PixelCraft Agency • New York</p>
+                            </div>
+                            <span class="inline-block px-3 py-1 rounded-full text-xs font-semibold bg-surface border border-bordercolor text-mutedtext w-fit">2020 — 2021</span>
+                        </div>
+                        <p class="text-mutedtext text-sm leading-relaxed mb-4">
+                            Built responsive landing pages and interactive marketing components for e-commerce brands with strict accessibility (WCAG AA) standards.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">JavaScript (ES6+)</span>
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">HTML5/CSS3</span>
+                            <span class="text-xs bg-surface text-mutedtext px-3 py-1 rounded-md">Git</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section -->
+        <section id="skills" class="py-24 border-t border-bordercolor">
+            <div class="reveal max-w-2xl mb-16">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext mb-4">
+                    <span>Expertise</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-darktext mb-4">Skills & Capabilities</h2>
+                <p class="text-mutedtext text-base leading-relaxed">
+                    A balanced toolkit combining deep aesthetic intuition with modern engineering rigor.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                
+                <!-- Skill Category 1 -->
+                <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle">
+                    <div class="w-12 h-12 rounded-xl bg-surface border border-bordercolor flex items-center justify-center text-accent mb-6 text-xl">
+                        <i class="fa-solid fa-pen-ruler"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-darktext mb-4">Design & Product</h3>
+                    <ul class="space-y-3 text-mutedtext text-sm">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Design Systems & Tokens</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>User Research & Wireframing</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Interaction & Prototyping</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Typography & Layout Hierarchy</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Skill Category 2 -->
+                <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle">
+                    <div class="w-12 h-12 rounded-xl bg-surface border border-bordercolor flex items-center justify-center text-accent mb-6 text-xl">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-darktext mb-4">Frontend Engineering</h3>
+                    <ul class="space-y-3 text-mutedtext text-sm">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>HTML5, CSS3, Modern JavaScript</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>React, Next.js & TypeScript</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Tailwind CSS & SCSS</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Responsive & Mobile-First Design</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Skill Category 3 -->
+                <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle">
+                    <div class="w-12 h-12 rounded-xl bg-surface border border-bordercolor flex items-center justify-center text-accent mb-6 text-xl">
+                        <i class="fa-solid fa-toolbox"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-darktext mb-4">Tools & Workflow</h3>
+                    <ul class="space-y-3 text-mutedtext text-sm">
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Figma / FigJam Expert</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Git, GitHub & CI/CD workflows</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Vercel & Web Deployment</span>
+                        </li>
+                        <li class="flex items-center space-x-2">
+                            <i class="fa-solid fa-check text-accent text-xs"></i>
+                            <span>Accessibility (WCAG AA)</span>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="py-24 border-t border-bordercolor">
+            <div class="reveal max-w-2xl mb-16">
+                <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext mb-4">
+                    <span>Testimonials</span>
+                </div>
+                <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-darktext mb-4">Client Feedback</h2>
+                <p class="text-mutedtext text-base leading-relaxed">
+                    Kind words from people I've had the pleasure of collaborating with.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle flex flex-col justify-between">
+                    <p class="text-mutedtext text-base italic leading-relaxed mb-8">
+                        "Alex has an exceptional eye for minimalist design coupled with elite engineering execution. He transformed our messy design system into a cohesive, lightning-fast component library."
+                    </p>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-bordercolor">
+                        <div class="w-10 h-10 rounded-full bg-surface border border-bordercolor flex items-center justify-center font-bold text-darktext text-sm">
+                            SK
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-darktext">Sarah Kensington</p>
+                            <p class="text-xs text-mutedtext">VP of Product at FintechOS</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="reveal bg-cardbg p-8 rounded-2xl border border-bordercolor shadow-subtle flex flex-col justify-between">
+                    <p class="text-mutedtext text-base italic leading-relaxed mb-8">
+                        "Working with Alex was seamless. He understood our brand vision instantly and delivered a stunning headless web store that exceeded all conversion benchmarks within the first month."
+                    </p>
+                    <div class="flex items-center space-x-4 pt-4 border-t border-bordercolor">
+                        <div class="w-10 h-10 rounded-full bg-surface border border-bordercolor flex items-center justify-center font-bold text-darktext text-sm">
+                            DM
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-darktext">Daniel Moreau</p>
+                            <p class="text-xs text-mutedtext">Creative Director, Voxel Studio</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="py-24 border-t border-bordercolor">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                <div class="lg:col-span-5 reveal">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-md bg-surface border border-bordercolor text-xs font-semibold uppercase tracking-wider text-mutedtext mb-4">
+                        <span>Get in Touch</span>
+                    </div>
+                    <h2 class="text-3xl sm:text-4xl font-bold tracking-tight text-darktext mb-6">
+                        Let's build something exceptional together.
+                    </h2>
+                    <p class="text-mutedtext text-base leading-relaxed mb-8">
+                        Have a project in mind, a design system challenge, or just want to connect? Drop me a message and I'll get back to you within 24 hours.
+                    </p>
+
+                    <div class="space-y-4 text-sm text-mutedtext">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-surface border border-bordercolor flex items-center justify-center text-accent">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <span class="font-medium text-darktext">alex.rivers.design@example.com</span>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <div class="w-10 h-10 rounded-xl bg-surface border border-bordercolor flex items-center justify-center text-accent">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <span class="font-medium text-darktext">San Francisco, CA (Open to Remote)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-7 reveal">
+                    <form id="contact-form" class="bg-cardbg p-8 sm:p-10 rounded-2xl border border-bordercolor shadow-subtle space-y-6">
+                        <div>
+                            <label for="name" class="block text-xs font-semibold uppercase tracking-wider text-mutedtext mb-2">Your Name</label>
+                            <input type="text" id="name" required placeholder="Jane Doe" 
+                                class="w-full px-4 py-3 rounded-xl bg-surface border border-bordercolor text-darktext text-sm focus:outline-none focus:border-accent transition-colors">
+                        </div>
+                        <div>
+                            <label for="email" class="block text-xs font-semibold uppercase tracking-wider text-mutedtext mb-2">Your Email</label>
+                            <input type="email" id="email" required placeholder="jane@example.com" 
+                                class="w-full px-4 py-3 rounded-xl bg-surface border border-bordercolor text-darktext text-sm focus:outline-none focus:border-accent transition-colors">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-xs font-semibold uppercase tracking-wider text-mutedtext mb-2">Your Message</label>
+                            <textarea id="message" rows="5" required placeholder="Tell me about your project..." 
+                                class="w-full px-4 py-3 rounded-xl bg-surface border border-bordercolor text-darktext text-sm focus:outline-none focus:border-accent transition-colors resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full py-4 rounded-xl bg-darktext text-cream font-semibold text-sm hover:bg-accent transition-all duration-300 shadow-sm flex items-center justify-center space-x-2">
+                            <span>Send Message</span>
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-bordercolor bg-surface/50 py-12">
+        <div class="max-w-6xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-6 text-sm text-mutedtext">
+            <p>© 2026 Alex Rivers. Designed & Developed with precision.</p>
+            <div class="flex items-center space-x-6">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-darktext transition-colors">GitHub</a>
+                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="hover:text-darktext transition-colors">LinkedIn</a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="hover:text-darktext transition-colors">Twitter / X</a>
+                <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer" class="hover:text-darktext transition-colors">Dribbble</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Project Detail Modal -->
+    <div id="project-modal" class="fixed inset-0 z-50 bg-darktext/60 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-cardbg max-w-2xl w-full rounded-2xl border border-bordercolor shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="modal-content-box">
+            <div class="relative aspect-[16/9] bg-surface">
+                <img id="modal-img" src="" alt="Project Preview" class="w-full h-full object-cover">
+                <button onclick="closeModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-cream/90 text-darktext border border-bordercolor flex items-center justify-center hover:bg-darktext hover:text-white transition-colors">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="p-8 space-y-4">
+                <h3 id="modal-title" class="text-2xl font-bold text-darktext"></h3>
+                <p id="modal-desc" class="text-mutedtext text-sm sm:text-base leading-relaxed"></p>
+                <div class="pt-4 flex justify-end">
+                    <button onclick="closeModal()" class="px-6 py-2.5 rounded-full bg-darktext text-cream text-sm font-semibold hover:bg-accent transition-colors">
+                        Close Modal
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Interactions -->
+    <script>
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const bar3 = document.getElementById('bar3');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+            const isOpen = !mobileMenu.classList.contains('hidden');
+            bar1.style.transform = isOpen ? 'rotate(45deg) translate(4px, 4px)' : 'none';
+            bar2.style.opacity = isOpen ? '0' : '1';
+            bar3.style.transform = isOpen ? 'rotate(-45deg) translate(4px, -4px)' : 'none';
+        }
+
+        menuBtn.addEventListener('click', toggleMobileMenu);
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+                bar1.style.transform = 'none';
+                bar2.style.opacity = '1';
+                bar3.style.transform = 'none';
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Portfolio Filtering logic
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const projectCards = document.querySelectorAll('.project-card');
+
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update active button styles
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-darktext', 'text-cream');
+                    b.classList.add('bg-surface', 'border', 'border-bordercolor', 'text-mutedtext');
+                });
+                btn.classList.remove('bg-surface', 'border', 'border-bordercolor', 'text-mutedtext');
+                btn.classList.add('bg-darktext', 'text-cream');
+
+                const filterValue = btn.getAttribute('data-filter');
+
+                projectCards.forEach(card => {
+                    const categories = card.getAttribute('data-category');
+                    if (filterValue === 'all' || categories.includes(filterValue)) {
+                        card.style.display = 'flex';
+                        setTimeout(() => {
+                            card.style.opacity = '1';
+                            card.style.transform = 'translateY(0)';
+                        }, 50);
+                    } else {
+                        card.style.opacity = '0';
+                        card.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            card.style.display = 'none';
+                        }, 300);
+                    }
+                });
+            });
+        });
+
+        // Project Modal logic
+        const modal = document.getElementById('project-modal');
+        const modalContentBox = document.getElementById('modal-content-box');
+        const modalTitle = document.getElementById('modal-title');
+        const modalDesc = document.getElementById('modal-desc');
+        const modalImg = document.getElementById('modal-img');
+
+        function openModal(title, desc, imgSrc) {
+            modalTitle.textContent = title;
+            modalDesc.textContent = desc;
+            modalImg.src = imgSrc;
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => {
+                modalContentBox.classList.remove('scale-95', 'opacity-0');
+                modalContentBox.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            modalContentBox.classList.remove('scale-100', 'opacity-100');
+            modalContentBox.classList.add('scale-95', 'opacity-0');
+            setTimeout(() => {
+                modal.classList.remove('flex');
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Contact Form Submission
+        const contactForm = document.getElementById('contact-form');
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nameInput = document.getElementById('name').value;
+            
+            // Show custom toast notification instead of alert()
+            toastMessage.textContent = `Thanks ${nameInput}! Your message was sent successfully.`;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            contactForm.reset();
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 4000);
+        });
+    </script>
+</body>
+</html>
